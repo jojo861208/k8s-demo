@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+{% load crispy_forms_tags %}
+
+<html>
+    <head>
+        <title>Index</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        {% include 'human/nav_accounts.html' %}
+        <br />
+        <div class="container">
+            <h2>{{ case.name }}</h2>
+            
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">欄位</th>
+                        <th scope="col">值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>時間</td>
+                        <td>{{ case.startTime }} ~ {{ case.endTime }}</td>
+                    </tr>
+                    <tr>
+                        <th>地點</td>
+                        <td>
+                            <iframe width="500" height="300" src = "https://maps.google.com/maps?q={{ case.location.y }},{{ case.location.x }}&hl=es;z=10&amp;output=embed"></iframe>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>距離</td>
+                        <td>
+                            {{ case.distance.km|floatformat:2 }} KM
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>描述</td>
+                        <td>{{ case.description }}</td>
+                    </tr>
+                    <tr>
+                        <th>項目</td>
+                        <td>
+                            <table class="table">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">技能</th>
+                                        <th scope="col">說明</th>
+                                        <th scope="col">申請表單</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in case.items %}
+                                        <tr>
+                                            <th scope="row">{{ i.skill }}</th>
+                                            <td>{{ i.description }}</td>
+                                            <td>
+                
+                                                <form method="POST" action="{% url 'human:itemhuman-create' pk=case.id pk2=i.id %}">
+                                                    {% csrf_token %}
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="number" id="inlineCheckbox1" name="moneyRequire" placeholder="要求時薪" required>
+                                                    </div>
+                                                    <input class="btn btn-primary" type="submit" value="提交申請">
+                                                </form>       
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

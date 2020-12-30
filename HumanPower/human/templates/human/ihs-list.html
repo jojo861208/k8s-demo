@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+{% load crispy_forms_tags %}
+
+<html>
+    <head>
+        <title>Index</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        {% include 'human/nav_accounts.html' %}
+        <br />
+        <div class="container">
+            <h2>申請狀態</h2>
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">工作</th>
+                        <th scope="col">申請項目</th>
+                        <th scope="col">要求時薪</th>
+                        <th scope="col">申請狀態</th>
+                        <th scope="col">更改要求薪資</th>
+                        <th scope="col">動作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ih in ihs %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'human:case-detail' pk=ih.item.case.id %}">{{ ih.item.case.name }}</a>
+                        </td>
+                        <td>
+                            {{ ih.item.skill }}
+                        </td>
+                        <td>
+                            {{ ih.moneyRequired }} 元
+                        </td>
+                        <td>
+                            {% if ih.money and ih.hours %}
+                                <p>
+                                {% if not ih.allagree %}對方提出:{% endif %}
+                                {{ ih.money }} 元 X {{ ih.hours }} 小時 = {{ ih.total2 }} 元
+                                </p>
+                                {% if ih.agree %}
+                                    <p>
+                                    {% if not ih.allagree %}
+                                        等待被選定
+                                    {% else %}
+                                        已被選定
+                                    {% endif %}
+                                    </p>
+                                {% endif %}
+                            {% else %}
+                                等待回應
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="POST" action="{% url 'human:itemhuman-update' pk=ih.id %}">
+                                {% csrf_token %}
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="number" id="inlineCheckbox1" name="moneyRequire" placeholder="要求時薪" required {% if ih.agree %}disabled{% endif %}>
+                                </div>
+                                <input class="btn btn-primary" type="submit" value="提交">
+                            </form>    
+                        </td>
+                        <td>
+                            
+                            <form class="actionForm" method="POST" action="{% url 'human:itemhuman-action' pk=ih.id %}">
+                                {% csrf_token %}
+                                {% if ih.money and ih.hours %}
+                                    {% if not ih.agree %}
+                                        <input class="btn btn-primary" type="submit" name="agree" onclick="return confirm('確定同意?')" value="同意">
+                                    {% endif %}
+                                {% endif %}
+                                {% if not ih.allagree %}
+                                    <input class="btn btn-danger" type="submit" name="delete" onclick="return confirm('確定刪除?')" value="刪除">
+                                {% endif %}
+                            </form>    
+                            
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </body>
+</html>

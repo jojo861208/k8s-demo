@@ -1,0 +1,7 @@
+django==1.11.20
+django-widget-tweaks==1.4.3
+pillow
+psycopg2==2.8.2
+django-map-widgets==0.2.2
+django-crispy-forms==1.7.2
+django-google-maps==0.11.0

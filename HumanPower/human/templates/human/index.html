@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+{% load crispy_forms_tags %}
+
+<html>
+    <head>
+        <title>Index</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        {% include 'human/nav_accounts.html' %}
+        <br />
+        <div class="container">
+            <h2>個人資料</h2>
+            
+            <form method="POST" action="{% url 'human:index' %}">
+                {% csrf_token %}
+                {{form.media}}
+                {{ form|crispy }}
+
+                <div class="form-group">
+                    <label class="control-label">
+                        專長
+                    </label>
+                    {{ expertiseInlineFormSet.management_form|crispy }}
+                    {{ expertiseInlineFormSet.non_form_errors }}
+                    <ol>
+                    {% for expertiseForm in expertiseInlineFormSet %}
+                        <li>
+                            {{ expertiseForm|crispy }}
+                        </li>
+                    {% endfor %}
+                    </ol>         
+                </div>
+                
+                <input class="btn btn-primary" type="submit" value="保存">
+            </form>
+        </div>
+    </body>
+</html>

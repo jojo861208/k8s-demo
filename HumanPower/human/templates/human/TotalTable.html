@@ -1,0 +1,24 @@
+<div>
+    <div align="right">
+        {% for ih in itemHumans %}
+        <p>
+            <a href="{% url 'admin:human_human_change' ih.human.id %}" target="_blank">{{ ih.human.name }}</a>
+            :
+            {{ ih.hours }} 小時 X {{ ih.money }} 時薪 = {{ ih.total }} 元
+        </p>
+        {% endfor %}
+    </div>
+    <hr/>
+    <p>
+        總時數: {{ totalHours }} 小時
+    </p>
+    <p>
+        平均時數: {{ averageHours }} 小時 / 人
+    </p>
+    <p>
+        平均時薪: {{ averageMoney }} 元 / 人
+    </p>
+    <p>
+        項目總花費: {{ totalMoney }} 元
+    </p>
+</div>

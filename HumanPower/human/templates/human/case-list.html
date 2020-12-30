@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+{% load crispy_forms_tags %}
+
+<html>
+    <head>
+        <title>Index</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        {% include 'human/nav_accounts.html' %}
+        <br />
+        <div class="container">
+            <h2>工作清單</h2>
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">標題</th>
+                        <th scope="col">開始時間</th>
+                        <th scope="col">結束時間</th>
+                        <th scope="col">距離</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in cases %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'human:case-detail' pk=c.id %}">{{ c.name }}</a>
+                        </td>
+                        <td>{{ c.startTime }}</td>
+                        <td>{{ c.endTime }}</td>
+                        <td>{{ c.distance.km|floatformat:2 }} KM</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
